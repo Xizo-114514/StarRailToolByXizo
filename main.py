@@ -1,7 +1,7 @@
 import ctypes
 import json
 import re
-import subprocess
+from tkinter import filedialog
 import requests
 import time
 import zipfile
@@ -117,6 +117,18 @@ def find_exe():
                 choose_exe_bar.delete("1.0", "end")
                 choose_exe_bar.insert("insert", "未找到StarRail.exe\n请确认游戏是否安装")
                 choose_exe_bar.configure(state='disabled')
+
+def choose_exe():
+    msg.showinfo('提示', '请先尝试右侧自动查找路径，找不到再手动选择。\n请选择启动器Star Rail文件夹下的Game文件夹中的StarRail.exe。')
+    exepath = filedialog.askopenfile(filetypes=[("星穹铁道游戏EXE", ("StarRail.exe"))])
+    exepath = exepath.name
+    choose_exe_bar.configure(state='normal')
+    choose_exe_bar.delete("1.0","end")
+    choose_exe_bar.insert("insert", exepath)
+    choose_exe_bar.configure(state='disabled')
+    config = open(appdata + r"\config.ini.xizo", "w")
+    config.write(exepath)
+    config.close()
 
 def get_pid(name):
     pid = None
@@ -297,7 +309,7 @@ if __name__ == '__main__':
     state="readonly", font=("微软雅黑", 10), values=RenderScale_list, textvariable=RenderScale_var)
 
     choose_exe_bar = tk.Text(root, height=2,
-    state="disabled", font=("微软雅黑", 10))
+    state="disabled", font=("微软雅黑", 8))
     choose_exe_bar.configure(state='normal')
     choose_exe_bar.insert("insert", "游戏StarRail.exe路径\n       (点击自动查找)→")
     choose_exe_bar.configure(state='disabled')
@@ -305,6 +317,7 @@ if __name__ == '__main__':
     #Buttons
     install_btn = tk.Button(root, text="应用", command=install, fg='black', bg='light blue', font=("微软雅黑", 10))
     find_exe_btn = tk.Button(root, text="查找\n路径", command=find_exe, font=("微软雅黑", 9))
+    choose_exe_btn = tk.Button(root, text="手动\n选择", command=choose_exe, font=("微软雅黑", 9))
     start_btn = tk.Button(root, text="启动", command=start, fg='black', bg='light green', font=("微软雅黑", 10))
     end_btn = tk.Button(root, text="结束", command=end, fg='black', bg='pink', font=("微软雅黑", 10))
     restart_btn = tk.Button(root, text="重启", command=restart, fg='black', bg='light yellow', font=("微软雅黑", 10))
@@ -315,8 +328,9 @@ if __name__ == '__main__':
     choose_RenderScale_combobox.place(x=385, y=40)
     IsFullScreen_checkbtn.place(x=490, y=38)
     install_btn.place(x=540, y=10, width=56, height=55)
-    choose_exe_bar.place(x=445, y=110, width=160, height=40)
+    choose_exe_bar.place(x=480, y=110, width=125, height=47)
     find_exe_btn.place(x=605, y=110)
+    choose_exe_btn.place(x=445, y=110)
     start_btn.place(x=445, y=160, width=60)
     end_btn.place(x=513, y=160, width=60)
     restart_btn.place(x=580, y=160, width=60)
